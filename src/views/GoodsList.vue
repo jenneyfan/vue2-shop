@@ -8,11 +8,11 @@
           <span class="sortby">排序:</span>
           <a href="javascript:void(0)" class="default cur">默认</a>
           <a href="javascript:void(0)" class="price">价格 <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
-          <a href="javascript:void(0)" class="filterby">筛选</a>
+          <a href="javascript:void(0)" class="filterby" @click.stop="showFilterPop">筛选</a>
         </div>
         <div class="accessory-result">
           <!-- filter -->
-          <div class="filter" id="filter">
+          <div class="filter" id="filter" :class = "{'filterby-show':filterBy}">
             <dl class="filter-price">
               <dt>价格区间:</dt>
               <dd>
@@ -33,7 +33,7 @@
               <ul>
                 <li v-for="item in goodsList">
                   <div class="pic">
-                    <a href="#"><img :src="'/static/img/' + item.productImage" alt=""></a>
+                    <a href="#"><img v-lazy="'/static/img/' + item.productImage" alt=""></a>
                   </div>
                   <div class="main">
                     <div class="name">{{item.productName}}</div>
@@ -49,6 +49,8 @@
         </div>
       </div>
     </div>
+
+    <div class="md-overlay" v-show="overLayFlag" @click.stop="closePop"></div>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -59,6 +61,7 @@
   import NavHeader from './../components/NavHeader.vue'
   import NavBread from './../components/NavBread.vue'
   import NavFooter from './../components/NavFooter.vue'
+
   import axios from 'axios'
   export default {
     name: 'GoodsList',
@@ -91,7 +94,9 @@
             endPrice:'6000.00'
           }
         ],
-        priceChecked:'all'
+        priceChecked:'all',
+        filterBy:false,
+        overLayFlag:false
       }
     },
     components:{
@@ -112,6 +117,16 @@
       // 价格过滤
       setPriceFilter(index){
         this.priceChecked = index;
+      },
+      // 移动端过滤弹层
+      showFilterPop(){
+        this.filterBy = true;
+        this.overLayFlag = true;
+      },
+      // 关闭弹层
+      closePop(){
+        this.filterBy = false;
+        this.overLayFlag = false;
       }
     }
   }
