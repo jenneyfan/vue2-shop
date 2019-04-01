@@ -4,8 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var ejs = require('ejs');
+
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/goods');
+var goodsRouter = require('./routes/goods');
 
 var app = express();
 
@@ -14,14 +15,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('.html',ejs.__express);
 app.set('view engine', 'html');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger('dev'));     //  日志
+app.use(express.json());    // 解析JSON数据
+app.use(express.urlencoded({ extended: false }));  // URL编码
+app.use(cookieParser());        // 解析cookie请求
+app.use(express.static(path.join(__dirname, 'public')));    // 设置静态资源路径
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/goods', goodsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

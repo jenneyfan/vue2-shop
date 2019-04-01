@@ -109,9 +109,10 @@
     },
     methods:{
       getGoodsList(){
-        axios.get('/static/mock/goods.json')
+        axios.get('/goods')
           .then((result)=>{
-            this.goodsList = result.data.result;
+            //console.log(result);
+            this.goodsList = result.data.result.list;
           })
       },
       // 价格过滤
