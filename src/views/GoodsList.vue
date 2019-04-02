@@ -68,6 +68,9 @@
     data () {
       return {
         goodsList:[],
+        page:1,
+        pageSize:8,
+        sortFlag:1,
         priceFilter:[
           {
             startPrice:'0.00',
@@ -109,8 +112,14 @@
     },
     methods:{
       getGoodsList(){
-        axios.get('http://192.168.0.117:3000/goods')
-          .then((result)=>{
+        var param={
+          page:this.page,
+          pageSize:this.pageSize,
+          sort:this.sortFlag
+        }
+        axios.get('http://192.168.0.117:3000/goods',{
+          params:param
+        }).then((result)=>{
             //console.log(result);
             this.goodsList = result.data.result.list;
           })
