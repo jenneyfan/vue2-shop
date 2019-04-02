@@ -109,7 +109,7 @@
     },
     methods:{
       getGoodsList(){
-        axios.get('/goods')
+        axios.get('http://192.168.0.117:3000/goods')
           .then((result)=>{
             //console.log(result);
             this.goodsList = result.data.result.list;
