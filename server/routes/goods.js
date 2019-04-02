@@ -20,7 +20,14 @@ mongoose.connection.on("disconnected", function () {
 
 /* 查询商品列表数据*/
 router.get('/', function(req, res, next) {
-  Goods.find({},function (err,doc) {
+  let page = parseInt(req.param('page'));
+  let pageSize = parseInt(req.param('pageSize'));
+  let sort = parseInt(req.param('sort'));
+  let skip = (page-1)*pageSize;
+  let param = {};
+  let goodsModel = Goods.find(param).skip(skip).limit(pageSize);
+  goodsModel.sort({'salePrice':sort});
+  goodsModel.exec(function (err,doc) {
     if(err){
       res.json({
         status:'1',
