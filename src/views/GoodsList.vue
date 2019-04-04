@@ -77,9 +77,9 @@
         goodsList:[],
         page:1,
         pageSize:8,
-        sortFlag:true,
-        busy:true,
-        loading:false,
+        sortFlag:true,  // 排序
+        busy:true,      // 组件开关，默认不生效
+        loading:false,  // 数据加载状态，默认不加载
         priceFilter:[
           {
             startPrice:'0.00',
@@ -124,7 +124,8 @@
         var param={
           page:this.page,
           pageSize:this.pageSize,
-          sort:this.sortFlag?1:-1
+          sort:this.sortFlag?1:-1,
+          priceLevel:this.priceChecked
         };
         this.loading = true;
         axios.get('http://192.168.0.117:3000/goods',{
@@ -172,7 +173,10 @@
       },
       // 价格过滤
       setPriceFilter(index){
+        console.log(index);
         this.priceChecked = index;
+        this.page = 1;
+        this.getGoodsList();
       },
       // 移动端过滤弹层
       showFilterPop(){
