@@ -39,7 +39,7 @@
                     <div class="name">{{item.productName}}</div>
                     <div class="price">{{item.salePrice}}</div>
                     <div class="btn-area">
-                      <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                      <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                     </div>
                   </div>
                 </li>
@@ -177,6 +177,19 @@
         this.priceChecked = index;
         this.page = 1;
         this.getGoodsList();
+      },
+      // 加入购物车
+      addCart(productId){
+        axios.post('http://192.168.0.117:3000/goods/addCart',{
+          productId:productId
+        }).then((res)=>{
+          var res = res.data;
+          if(res.status == 0){
+            alert('加入购物车成功')
+          }else{
+            alert('加入购物车失败：' + res.msg)
+          }
+        })
       },
       // 移动端过滤弹层
       showFilterPop(){
