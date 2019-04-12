@@ -94,7 +94,23 @@
                 nickName:''
             }
         },
+        mounted(){
+            this.checkLogin()
+        },
         methods:{
+            // 检测是否登录
+            checkLogin(){
+               axios.get('http://192.168.0.117:3000/users/checkLogin').then((response) => {
+                 var res = response.data;
+                 console.log(res);
+                 if(res.status == '0'){
+                   this.nickName = res.result;
+                   this.loginModalFlag = false;
+                 }else{
+
+                 }
+               })
+            },
             // 登录
             login(){
               if(!this.userName || !this.userPwd){
