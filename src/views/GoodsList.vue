@@ -128,7 +128,7 @@
           priceLevel:this.priceChecked
         };
         this.loading = true;
-        axios.get('http://192.168.0.117:3000/goods',{
+        axios.get('http://192.168.0.117:3000/goods/list',{
           params:param
         }).then((result)=>{
             var res = result.data;
