@@ -56,10 +56,11 @@
                                 </div>
                                 <div class="cart-tab-5">
                                     <div class="cart-item-opration">
-                                        <a href="javascript:;" class="item-edit-btn">
-                                            <svg class="icon icon-del">
-                                                <use xlink:href="#icon-del"></use>
-                                            </svg>
+                                        <a href="javascript:;" class="item-edit-btn" @click="cartDel(item.productId)">
+                                            <!--<svg class="icon icon-del">-->
+                                                <!--<use xlink:href="#icon-del"></use>-->
+                                            <!--</svg>-->
+                                            删除
                                         </a>
                                     </div>
                                 </div>
@@ -91,6 +92,12 @@
                 </div>
             </div>
         </div>
+        <modal :mdShow = "mdShow" @click = "closeModal">
+            <p slot="message">删除成功</p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" href="javascript:void(0);" @click="closeModal">关闭</a>
+            </div>
+        </modal>
         <nav-footer></nav-footer>
     </div>
 </template>
@@ -108,7 +115,8 @@
         name: 'HelloWorld',
         data() {
             return {
-                cartList:[]
+                cartList:[],
+                mdShow:false
             }
         },
         components:{
@@ -137,6 +145,24 @@
                     let res = response.data;
                     this.cartList = res.result;
                 })
+            },
+            // 删除购物车商品
+            cartDel(productId){
+                axios.post('http://192.168.0.117:3000/users/cartDel',
+                    {productId:productId}
+                ).then((response)=>{
+                    let res = response.data;
+                    if(res.status == '1'){
+                        alert('删除失败')
+                    }else{
+                        this.mdShow = true;
+                        this.init();
+                    }
+                })
+            },
+            // 关闭模态框
+            closeModal(){
+                this.mdShow = false;
             }
         }
     }
