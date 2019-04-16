@@ -38,15 +38,15 @@ router.post('/login',function (req,res,next) {
 
 // 登出接口
 router.post('/logout',function (req,res,next) {
-  res.cookie('userId','',{
-    path:'/',
-    maxAge:-1
-  });
-  res.json({
-    status:'0',
-    msg:'',
-    result:''
-  });
+    res.cookie('userId','',{
+        path:'/',
+        maxAge:-1
+    });
+    res.json({
+        status:'0',
+        msg:'',
+        result:''
+    });
 });
 
 // 检查登录状态cookies
@@ -66,5 +66,26 @@ router.get('/checkLogin',function (req,res,next) {
   }
 })
 
+// 检查当前用户的购物车数据
+router.get('/cartList',function (req,res,next) {
+    var userId = req.cookies.userId;
+    User.findOne({userId:userId},function (err,doc) {
+        if(err){
+            res.json({
+                status:'1',
+                msg:err.message,
+                result:''
+            })
+        }else{
+            if(doc){
+                res.json({
+                    status:'0',
+                    msg:'',
+                    result:doc.cartList
+                })
+            }
+        }
+    })
+})
 
 module.exports = router;
