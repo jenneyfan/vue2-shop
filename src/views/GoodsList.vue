@@ -56,7 +56,23 @@
         </div>
       </div>
     </div>
-
+    <modal :mdShow = "mdShow" v-on:close = "closeModal">
+      <p slot="message">
+        请先登录，否则无法加入购物车
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:void(0);" @click="closeModal">关闭</a>
+      </div>
+    </modal>
+    <modal :mdShow = "mdShowCart" v-on:close = "closeModal">
+      <p slot="message">
+        加入购物车成功
+      </p>
+      <div slot="btnGroup">
+        <span class="btn btn--m"  @click="closeModal">继续购物</span>
+        <router-link class="btn btn--m" to="/cart">查看购物车</router-link>
+      </div>
+    </modal>
     <div class="md-overlay" v-show="overLayFlag" @click.stop="closePop"></div>
     <nav-footer></nav-footer>
   </div>
@@ -68,7 +84,7 @@
   import NavHeader from './../components/NavHeader.vue'
   import NavBread from './../components/NavBread.vue'
   import NavFooter from './../components/NavFooter.vue'
-
+  import Modal from './../components/Modal.vue'
   import axios from 'axios'
   export default {
     name: 'GoodsList',
@@ -108,13 +124,16 @@
         ],
         priceChecked:'all',
         filterBy:false,
-        overLayFlag:false
+        overLayFlag:false,
+        mdShow:false,
+        mdShowCart:false
       }
     },
     components:{
       NavHeader,
       NavBread,
-      NavFooter
+      NavFooter,
+      Modal
     },
     mounted(){
       this.getGoodsList();
@@ -178,6 +197,10 @@
         this.page = 1;
         this.getGoodsList();
       },
+      // 消息提示框
+      closeModal(){
+        this.mdShow = false;
+      },
       // 加入购物车
       addCart(productId){
         axios.post('http://192.168.0.117:3000/goods/addCart',{
@@ -185,9 +208,9 @@
         }).then((res)=>{
           var res = res.data;
           if(res.status == 0){
-            alert('加入购物车成功')
+            this.mdShowCart = true; // 加入购物车成功
           }else{
-            alert('加入购物车失败：' + res.msg)
+            this.mdShow = true; // 加入购物车失败
           }
         })
       },
