@@ -319,7 +319,9 @@ html {
   border: 1px solid #e9e9e9;
   overflow: hidden; }
 .cart-item-list .cart-item-pic img {
-  width: 100%; }
+    margin-top: 50%;
+    transform: translateY(-50%);
+    width: 100%; }
 .cart-item-list .cart-item-title {
   display: -webkit-box;
   display: -webkit-flex;

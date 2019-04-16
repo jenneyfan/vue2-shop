@@ -1,7 +1,9 @@
 <template>
     <div>
         <nav-header></nav-header>
-        <nav-bread></nav-bread>
+        <nav-bread>
+            <span>购物车</span>
+        </nav-bread>
         <div class="container">
             <div class="cart">
                 <div class="page-title-normal">
