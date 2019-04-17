@@ -391,6 +391,7 @@ html {
   font-size: 16px; }
 .cart-item-list .item-edit-btn {
   position: relative;
+    cursor: pointer;
   z-index: 6; }
 .cart-item-list .item-edit-btn:hover .icon {
   fill: #ee7a23; }
@@ -423,7 +424,7 @@ html {
 
 .item-edit-btn {
   display: inline-block;
-  width: 20px;
+  width: 35px;
   height: 20px; }
 .item-edit-btn .icon-del {
   width: 100%;

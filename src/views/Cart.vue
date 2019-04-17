@@ -56,12 +56,7 @@
                                 </div>
                                 <div class="cart-tab-5">
                                     <div class="cart-item-opration">
-                                        <a href="javascript:;" class="item-edit-btn" @click="cartDel(item.productId)">
-                                            <!--<svg class="icon icon-del">-->
-                                                <!--<use xlink:href="#icon-del"></use>-->
-                                            <!--</svg>-->
-                                            删除
-                                        </a>
+                                        <span class="item-edit-btn" @click="delCartConfirm(item)">删除</span>
                                     </div>
                                 </div>
                             </li>
@@ -92,10 +87,23 @@
                 </div>
             </div>
         </div>
-        <modal :mdShow = "mdShow" @click = "closeModal">
+        <modal :mdShow="mdConfirm" @close="closeModal()">
+            <p slot="message">确认要删除吗？</p>
+            <div slot="btnGroup">
+                <span class="btn btn--m" @click="delCart(item)">确认</span>
+                <span class="btn btn--m" @click="closeModal()">关闭</span>
+            </div>
+        </modal>
+        <modal :mdShow="mdTipOk" @close="closeModal()">
             <p slot="message">删除成功</p>
             <div slot="btnGroup">
-                <a class="btn btn--m" href="javascript:void(0);" @click="closeModal">关闭</a>
+                <span class="btn btn--m" @click="closeModal()">关闭</span>
+            </div>
+        </modal>
+        <modal :mdShow="mdTipError" @close="closeModal()">
+            <p slot="message">删除失败</p>
+            <div slot="btnGroup">
+                <span class="btn btn--m" @click="closeModal()">关闭</span>
             </div>
         </modal>
         <nav-footer></nav-footer>
@@ -116,7 +124,10 @@
         data() {
             return {
                 cartList:[],
-                mdShow:false
+                item:{},
+                mdConfirm:false,
+                mdTipOk:false,
+                mdTipError:false
             }
         },
         components:{
@@ -146,23 +157,38 @@
                     this.cartList = res.result;
                 })
             },
+            // 删除确认框
+            delCartConfirm(item){
+                this.mdConfirm = true;
+                this.item = item;
+            },
             // 删除购物车商品
-            cartDel(productId){
+            delCart(item){
+                this.closeModal();
                 axios.post('http://192.168.0.117:3000/users/cartDel',
-                    {productId:productId}
+                    {productId:item.productId}
                 ).then((response)=>{
                     let res = response.data;
+                    let _this = this;
                     if(res.status == '1'){
-                        alert('删除失败')
+                        this.mdTipError = true;
+                        setTimeout(function () {
+                            _this.mdTipError = false;
+                        },1000);
                     }else{
-                        this.mdShow = true;
+                        this.mdTipOk = true;
+                        setTimeout(function () {
+                            _this.mdTipOk = false;
+                        },1000);
                         this.init();
                     }
                 })
             },
             // 关闭模态框
             closeModal(){
-                this.mdShow = false;
+                this.mdConfirm = false;
+                this.mdTipOk = false;
+                this.mdTipError = false;
             }
         }
     }

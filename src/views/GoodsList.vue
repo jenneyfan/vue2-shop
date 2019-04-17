@@ -202,6 +202,7 @@
       // 消息提示框
       closeModal(){
         this.mdShow = false;
+        this.mdShowCart = false;
       },
       // 加入购物车
       addCart(productId){
