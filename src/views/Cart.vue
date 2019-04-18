@@ -67,10 +67,10 @@
                     <div class="cart-foot-inner">
                         <div class="cart-foot-l">
                             <div class="item-all-check">
-                                <a href="javascipt:;">
-                           <span class="checkbox-btn item-check-btn">
-                              <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
-                           </span>
+                                <a href="javascipt:;" @click="toggleCheckAll">
+                                   <span class="checkbox-btn item-check-btn" :class="{'check':checkAllFlag}">
+                                      <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
+                                   </span>
                                     <span>全选</span>
                                 </a>
                             </div>
@@ -140,6 +140,18 @@
             this.init();
         },
         computed:{
+            checkAllFlag(){
+                return this.checkedCount == this.cartList.length;
+            },
+            checkedCount(){
+                var i = 0;
+                this.cartList.forEach((item)=>{
+                    if(item.checked == '1'){
+                        i++
+                    }
+                })
+                return i;
+            },
             totalPrice(){
                 var money = 0;
                 this.cartList.forEach((item)=>{
@@ -179,6 +191,21 @@
                     let res = response.data;
                     if(res.status == '0'){
                         console.log('更新成功');
+                    }
+                })
+            },
+            // 全选
+            toggleCheckAll(){
+                var flag = !this.checkAllFlag;
+                this.cartList.forEach((item)=>{
+                    item.checked = flag ? '1': '0';
+                })
+                axios.post('http://192.168.0.117:3000/users/editCheckAll',{
+                    checkAll:flag
+                }).then((response)=>{
+                    let res = response;
+                    if(res.status == '0'){
+                        console.log('全选状态改变')
                     }
                 })
             },
