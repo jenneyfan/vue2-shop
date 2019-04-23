@@ -201,6 +201,32 @@ router.get('/addressList',function (req,res,next) {
     })
 })
 
-
+//收货地址删除
+router.post('/addressDel',function (req,res,next) {
+    var userId = req.cookies.userId,addressId = req.body.addressId;
+    User.update({
+        userId:userId
+    },{
+        $pull:{
+            'addressList':{
+                'addressId':addressId
+            }
+        }
+    },function (err,doc) {
+        if(err){
+            res.json({
+                status:'1',
+                msg:err.message,
+                result:''
+            })
+        }else{
+            res.json({
+                status:'0',
+                msg:'',
+                result:'suc'
+            })
+        }
+    })
+})
 
 module.exports = router;
