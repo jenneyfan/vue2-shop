@@ -71,6 +71,9 @@
                                             <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                                         </a>
                                     </div>
+                                    <div class="addr-opration addr-set-default">
+                                        <a href="javascript:;" class="addr-set-default-btn" v-if="!item.isDefault" @click="setDefault(item.addressId)"><i>设为默认地址</i></a>
+                                    </div>
                                     <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
                                 </li>
                                 <li class="addr-new">
@@ -85,7 +88,7 @@
                         </div>
 
                         <div class="shipping-addr-more">
-                            <a class="addr-more-btn up-down-btn" href="javascript:;" >
+                            <a class="addr-more-btn up-down-btn" href="javascript:;" @click="expand" :class="{'open':limit>3}" >
                                 更多地址
                                 <i class="i-up-down">
                                     <i class="i-up-down-l"></i>
@@ -121,23 +124,17 @@
                 </div>
             </div>
         </div>
-        <modal :mdShow="mdConfirm" @close="closeModal()">
+        <modal :mdShow="mdConfirm" @close="closeModal">
             <p slot="message">确认要删除吗？</p>
             <div slot="btnGroup">
                 <span class="btn btn--m" @click="delAddress(item)">确认</span>
-                <span class="btn btn--m" @click="closeModal()">关闭</span>
+                <span class="btn btn--m" @click="closeModal">关闭</span>
             </div>
         </modal>
-        <modal :mdShow="mdTipOk" @close="closeModal()">
-            <p slot="message">删除成功</p>
+        <modal :mdShow="mdTipOk" :mdMsg="mdMsg" @close="closeModal">
+            <p slot="message">{{mdMsg}}</p>
             <div slot="btnGroup">
-                <span class="btn btn--m" @click="closeModal()">关闭</span>
-            </div>
-        </modal>
-        <modal :mdShow="mdTipError" @close="closeModal()">
-            <p slot="message">删除失败</p>
-            <div slot="btnGroup">
-                <span class="btn btn--m" @click="closeModal()">关闭</span>
+                <span class="btn btn--m" @click="closeModal">关闭</span>
             </div>
         </modal>
         <nav-footer></nav-footer>
@@ -157,11 +154,15 @@
         name: 'HelloWorld',
         data() {
             return {
+                limit:3,
+                checkIndex:0,
+                selectedAddrId:'',
                 addressList:[],
+                addressId:'',
                 item:{},
                 mdConfirm:false,
                 mdTipOk:false,
-                mdTipError:false
+                mdMsg:''
             }
         },
         components:{
@@ -179,6 +180,32 @@
                 axios.get('http://192.168.0.117:3000/users/addressList').then((response)=>{
                     let res = response.data;
                     this.addressList = res.result;
+                    this.selectedAddrId = this.addressList[0].addressId;
+                })
+            },
+            // 显示更多地址
+            expand(){
+                if(this.limit == 3){
+                    this.limit = this.addressList.length;
+                }else{
+                    this.limit = 3;
+                }
+            },
+            // 设为默认地址
+            setDefault(addressId){
+                axios.post("http://192.168.0.117:3000/users/setDefault",{
+                    addressId:addressId
+                }).then((response)=>{
+                    let res = response.data;
+                    let _this = this;
+                    if(res.status=='0'){
+                        this.mdTipOk = true;
+                        this.mdMsg = '默认地址设置成功';
+                        setTimeout(function () {
+                            _this.mdTipOk = false;
+                            _this.init();
+                        },1000);
+                    }
                 })
             },
             // 删除确认框
@@ -186,7 +213,7 @@
                 this.mdConfirm = true;
                 this.item = item;
             },
-            // 删除购物车商品
+            // 删除收货地址
             delAddress(item){
                 this.closeModal();
                 axios.post('http://192.168.0.117:3000/users/addressDel',
@@ -195,12 +222,14 @@
                     let res = response.data;
                     let _this = this;
                     if(res.status == '1'){
-                        this.mdTipError = true;
+                        this.mdTipOk = true;
+                        this.mdMsg = res.msg;
                         setTimeout(function () {
-                            _this.mdTipError = false;
+                            _this.mdTipOk = false;
                         },1000);
                     }else{
                         this.mdTipOk = true;
+                        this.mdMsg = '删除成功';
                         setTimeout(function () {
                             _this.mdTipOk = false;
                         },1000);
@@ -212,7 +241,6 @@
             closeModal(){
                 this.mdConfirm = false;
                 this.mdTipOk = false;
-                this.mdTipError = false;
             }
         }
     }
@@ -220,5 +248,5 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+    .addr-list li .addr-set-default{ display: block}
 </style>

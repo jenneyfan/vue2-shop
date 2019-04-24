@@ -80,7 +80,7 @@
                                 总价: <span class="total-price">{{totalPrice | currency('￥')}}</span>
                             </div>
                             <div class="btn-wrap">
-                                <a class="btn btn--red">去结算</a>
+                                <a class="btn btn--red" @click="checkOut" :class="{'btn--dis':checkedCount==0}">去结算</a>
                             </div>
                         </div>
                     </div>
@@ -94,14 +94,8 @@
                 <span class="btn btn--m" @click="closeModal()">关闭</span>
             </div>
         </modal>
-        <modal :mdShow="mdTipOk" @close="closeModal()">
-            <p slot="message">删除成功</p>
-            <div slot="btnGroup">
-                <span class="btn btn--m" @click="closeModal()">关闭</span>
-            </div>
-        </modal>
-        <modal :mdShow="mdTipError" @close="closeModal()">
-            <p slot="message">删除失败</p>
+        <modal :mdShow="mdTipOk" :mdMsg="mdMsg" @close="closeModal()">
+            <p slot="message">{{mdMsg}}</p>
             <div slot="btnGroup">
                 <span class="btn btn--m" @click="closeModal()">关闭</span>
             </div>
@@ -128,7 +122,7 @@
                 item:{},
                 mdConfirm:false,
                 mdTipOk:false,
-                mdTipError:false
+                mdMsg:''
             }
         },
         components:{
@@ -227,16 +221,18 @@
                     let res = response.data;
                     let _this = this;
                     if(res.status == '1'){
-                        this.mdTipError = true;
-                        setTimeout(function () {
-                            _this.mdTipError = false;
-                        },1000);
-                    }else{
                         this.mdTipOk = true;
+                        this.mdMsg = '删除失败',
                         setTimeout(function () {
                             _this.mdTipOk = false;
                         },1000);
-                        this.init();
+                    }else{
+                        this.mdTipOk = true;
+                        this.mdMsg = '删除成功',
+                        setTimeout(function () {
+                            _this.mdTipOk = false;
+                            _this.init();
+                        },1000);
                     }
                 })
             },
@@ -244,7 +240,14 @@
             closeModal(){
                 this.mdConfirm = false;
                 this.mdTipOk = false;
-                this.mdTipError = false;
+            },
+            // 结算跳转页面
+            checkOut(){
+                if(this.checkedCount > 0){
+                    this.$router.push({
+                        path:'/address'
+                    })
+                }
             }
         }
     }

@@ -64,7 +64,7 @@ router.get('/checkLogin',function (req,res,next) {
       result:''
     })
   }
-})
+});
 
 // 检查当前用户的购物车数据
 router.get('/cartList',function (req,res,next) {
@@ -86,7 +86,7 @@ router.get('/cartList',function (req,res,next) {
             }
         }
     })
-})
+});
 
 //购物车删除
 router.post('/cartDel',function (req,res,next) {
@@ -114,7 +114,7 @@ router.post('/cartDel',function (req,res,next) {
             })
         }
     })
-})
+});
 
 // 修改商品数量
 router.post('/cartEdit',function (req,res,next) {
@@ -140,7 +140,7 @@ router.post('/cartEdit',function (req,res,next) {
             })
         }
     })
-})
+});
 
 // 全部选中
 router.post('/editCheckAll',function (req,res,next) {
@@ -177,7 +177,55 @@ router.post('/editCheckAll',function (req,res,next) {
         }
     })
 
-})
+});
+
+// 设置默认地址
+router.post('/setDefault',function (req,res,next) {
+    let userId = req.cookies.userId,
+        addressId = req.body.addressId;
+    if(!addressId){
+        res.json({
+            status:'1003',
+            msg:'addressId is null',
+            result:''
+        })
+    }else{
+        User.findOne({'userId':userId},function (err,doc) {
+            if(err){
+                res.json({
+                    status:'1',
+                    msg:err.message,
+                    result:''
+                })
+            }else{
+                var addressList = doc.addressList;
+                addressList.forEach((item)=>{
+                    if(item.addressId==addressId){
+                        item.isDefault = true;
+                    }else{
+                        item.isDefault = false;
+                    }
+                });
+
+                doc.save(function (err1,doc1) {
+                    if(err1){
+                        res.json({
+                            status:'1',
+                            msg:err1.message,
+                            result:''
+                        });
+                    }else{
+                        res.json({
+                            status:'0',
+                            msg:'',
+                            result:''
+                        });
+                    }
+                });
+            }
+        });
+    }
+});
 
 // 检查当前用户的收货地址数据
 router.get('/addressList',function (req,res,next) {
@@ -199,20 +247,12 @@ router.get('/addressList',function (req,res,next) {
             }
         }
     })
-})
+});
 
 //收货地址删除
 router.post('/addressDel',function (req,res,next) {
     var userId = req.cookies.userId,addressId = req.body.addressId;
-    User.update({
-        userId:userId
-    },{
-        $pull:{
-            'addressList':{
-                'addressId':addressId
-            }
-        }
-    },function (err,doc) {
+    User.findOne({userId:userId},function (err,doc) {
         if(err){
             res.json({
                 status:'1',
@@ -220,13 +260,39 @@ router.post('/addressDel',function (req,res,next) {
                 result:''
             })
         }else{
-            res.json({
-                status:'0',
-                msg:'',
-                result:'suc'
-            })
+            if(doc.addressList.length > 1){
+                User.update({
+                    userId:userId
+                },{
+                    $pull:{
+                        'addressList':{
+                            'addressId':addressId
+                        }
+                    }
+                },function (err,doc) {
+                    if(err){
+                        res.json({
+                            status:'1',
+                            msg:err.message,
+                            result:''
+                        })
+                    }else{
+                        res.json({
+                            status:'0',
+                            msg:'',
+                            result:'suc'
+                        })
+                    }
+                });
+            }else{
+                res.json({
+                    status:'1',
+                    msg:'至少保留一条数据',
+                    result:''
+                })
+            }
         }
-    })
-})
+    });
+});
 
 module.exports = router;

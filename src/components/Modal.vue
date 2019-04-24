@@ -23,7 +23,7 @@
 </style>
 <script>
   export default{
-    props:["mdShow"],
+    props:["mdShow","mdMsg"],
     data(){
       return{
         msg:''
