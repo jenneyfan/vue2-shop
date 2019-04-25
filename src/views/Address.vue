@@ -60,7 +60,7 @@
                     <div class="addr-list-wrap">
                         <div class="addr-list">
                             <ul>
-                                <li v-for="item in addressList">
+                                <li v-for="item in addressList" :class="{'check':selectedAddrId == item.addressId}">
                                     <dl>
                                         <dt>{{item.userName}}</dt>
                                         <dd class="address">{{item.streetName}}</dd>
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="next-btn-wrap">
-                        <a class="btn btn--m btn--red">去结算</a>
+                        <a class="btn btn--m btn--red" @click="checkOut">去结算</a>
                     </div>
                 </div>
             </div>
@@ -241,6 +241,12 @@
             closeModal(){
                 this.mdConfirm = false;
                 this.mdTipOk = false;
+            },
+            // 结算跳转页面
+            checkOut(){
+                this.$router.push({
+                    path:'/orderconfirm'
+                })
             }
         }
     }
