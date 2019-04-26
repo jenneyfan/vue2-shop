@@ -102,7 +102,6 @@
             checkLogin(){
                axios.get('http://192.168.0.117:3000/users/checkLogin').then((response) => {
                  var res = response.data;
-                 console.log(res);
                  if(res.status == '0'){
                    this.nickName = res.result;
                    this.loginModalFlag = false;

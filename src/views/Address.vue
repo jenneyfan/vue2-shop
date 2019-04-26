@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="next-btn-wrap">
-                        <a class="btn btn--m btn--red" @click="checkOut">去结算</a>
+                        <router-link class="btn btn--m btn--red" :to="{'path':'orderConfirm',query:{'addressId':selectedAddrId}}">去结算</router-link>
                     </div>
                 </div>
             </div>
@@ -241,12 +241,6 @@
             closeModal(){
                 this.mdConfirm = false;
                 this.mdTipOk = false;
-            },
-            // 结算跳转页面
-            checkOut(){
-                this.$router.push({
-                    path:'/orderconfirm'
-                })
             }
         }
     }
