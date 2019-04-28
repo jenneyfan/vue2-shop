@@ -326,8 +326,8 @@ router.post('/payMent',function (req,res,next) {
             var platform = '622';
             var r1 = Math.floor(Math.random()*10);
             var r2 = Math.floor(Math.random()*10);
-            var sysDate = new Date.Format('yyyyMMddhhmmss');
-            var createDate = new Date.Format('yyyy-MM-dd hh:mm:ss');
+            var sysDate = new Date().Format('yyyyMMddhhmmss');
+            var createDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
             var orderId = platform+r1+sysDate+r2;
             var order = {
                 orderId:orderId,
@@ -350,8 +350,8 @@ router.post('/payMent',function (req,res,next) {
                         status:'0',
                         msg:'',
                         result:{
-                            orderId:orderId,
-                            orderTotal:orderTotal
+                            orderId:order.orderId,
+                            orderTotal:order.orderTotal
                         }
                     });
                 }
