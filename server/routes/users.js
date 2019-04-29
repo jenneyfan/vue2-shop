@@ -361,9 +361,8 @@ router.post('/payMent',function (req,res,next) {
 });
 
 // 根据订单Id查询订单信息
-router.get("/orderDetail", function (req,res,next) {
+router.get('/orderDetail', function (req,res,next) {
     var userId = req.cookies.userId,orderId = req.param('orderId');
-    console.log('----------------'+req);
     User.findOne({userId:userId}, function (err,userInfo) {
         if(err){
             res.json({
@@ -406,4 +405,38 @@ router.get("/orderDetail", function (req,res,next) {
         }
     })
 });
+
+// 获取购物车商品数量
+router.get('/getCartCount',function (req,res,next) {
+    let userId = req.cookies.userId;
+    if(req.cookies && userId){
+        User.findOne({userId:userId},function (err,doc) {
+            if(err){
+                res.json({
+                    status:'1',
+                    msg:err.message,
+                    result:''
+                });
+            }else{
+                let cartList = doc.cartList;
+                let cartCount = 0;
+                cartList.map((item)=>{
+                    cartCount += parseFloat(item.productNum);
+                });
+                res.json({
+                    status:'0',
+                    msg:'',
+                    result:cartCount
+                });
+            }
+        });
+    }else{
+        res.json({
+            status:'1',
+            msg:'当前用户不存在',
+            result:''
+        })
+    }
+});
+
 module.exports = router;
