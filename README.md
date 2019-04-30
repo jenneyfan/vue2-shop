@@ -1,4 +1,4 @@
-# vue2-shop-lesson
+# vue2-shop
 
 > A Vue.js project
 
