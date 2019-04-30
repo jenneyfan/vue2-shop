@@ -28,10 +28,10 @@
                     </p>
                     <div class="order-create-btn-wrap">
                         <div class="btn-l-wrap">
-                            <a href="javascript:;" class="btn btn--m">购物车列表</a>
+                            <router-link to="/cart" class="btn btn--m">购物车列表</router-link>
                         </div>
                         <div class="btn-r-wrap">
-                            <a href="javascript:;" class="btn btn--m">商品列表</a>
+                            <router-link to="/goods" class="btn btn--m">商品列表</router-link>
                         </div>
                     </div>
                 </div>

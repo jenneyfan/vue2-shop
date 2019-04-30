@@ -215,7 +215,8 @@
         }).then((res)=>{
           var res = res.data;
           if(res.status == 0){
-            this.mdShowCart = true; // 加入购物车成功
+              this.mdShowCart = true; // 加入购物车成功
+              this.$store.commit('updateCartCount',1);
           }else{
             this.mdShow = true; // 加入购物车失败
           }

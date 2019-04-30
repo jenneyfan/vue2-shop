@@ -129,7 +129,8 @@
                 if(res.status == '0'){
                   this.errorTip = false;
                   this.loginModalFlag = false;
-                  this.nickName= res.result.userName;
+                  this.$store.commit('updateUserInfo',res.result.userName);
+                  this.getCartCount();
                 }else{
                   this.errorTip = true;
                 }

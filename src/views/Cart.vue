@@ -115,7 +115,7 @@
     import {currency} from './../util/currency'
     import axios from 'axios'
     export default {
-        name: 'HelloWorld',
+        name: '购物车',
         data() {
             return {
                 cartList:[],
@@ -189,8 +189,11 @@
                     let res = response.data;
                     if(res.status == '0'){
                         console.log('更新成功');
+                        if(flag!='chk'){
+                            this.$store.commit('updateCartCount',flag=='add'?1:-1);
+                        }
                     }
-                })
+                });
             },
             // 全选
             toggleCheckAll(){
@@ -231,6 +234,8 @@
                         this.mdMsg = '删除成功',
                         setTimeout(function () {
                             _this.mdTipOk = false;
+                            var delCartCount = _this.item.productNum;
+                            _this.$store.commit('updateCartCount',-delCartCount);
                             _this.init();
                         },1000);
                     }
@@ -246,7 +251,7 @@
                 if(this.checkedCount > 0){
                     this.$router.push({
                         path:'/address'
-                    })
+                    });
                 }
             }
         }
