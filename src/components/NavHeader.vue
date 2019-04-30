@@ -35,7 +35,7 @@
               <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-if="!nickName">登录</a>
               <a href="javascript:void(0)" class="navbar-link" @click="logOut" v-else>登出</a>
               <div class="navbar-cart-container">
-                <span class="navbar-cart-count" v-text="cartCount" v-if="cartCount"></span>
+                <span class="navbar-cart-count" v-text="cartCount" v-if="cartCount && showCart"></span>
                 <a class="navbar-link" href="/#/cart">
                   <svg class="navbar-cart-logo">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -91,7 +91,8 @@
                 userName:'admin',
                 userPwd:'123456',
                 errorTip:false,
-                loginModalFlag:false
+                loginModalFlag:false,
+                showCart:false
             }
         },
         mounted(){
@@ -107,8 +108,10 @@
                     var res = response.data;
                     if(res.status == '0'){
                         this.$store.commit('updateUserInfo',res.result);
+                        this.showCart = true;
                         this.loginModalFlag = false;
                     }else{
+                        this.showCart = false;
                         if(this.route.path!='/goods'){
                             this.$router.push('/goods');
                         }
@@ -130,9 +133,11 @@
                   this.errorTip = false;
                   this.loginModalFlag = false;
                   this.$store.commit('updateUserInfo',res.result.userName);
+                  this.showCart = true;
                   this.getCartCount();
                 }else{
                   this.errorTip = true;
+                  this.showCart = false;
                 }
               })
             },
@@ -142,7 +147,9 @@
                 .then((response)=>{
                   let res = response.data;
                   if(res.status == '0'){
-                    this.nickName = '';
+                      this.$store.commit('updateUserInfo',res.result.userName);
+                      this.$store.commit('updateCartCount',res.result);
+                      this.showCart = false;
                   }
               })
             },
@@ -151,6 +158,7 @@
                 axios.get('http://192.168.0.117:3000/users/getCartCount').then((res)=>{
                     var res = res.data;
                     this.$store.commit('updataCartCount',res.result);
+                    this.showCart = true;
                 });
             }
         }
