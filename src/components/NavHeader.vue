@@ -82,7 +82,8 @@
 
 <script>
     import './../../static/css/login.css'
-    import axios from 'axios'
+    import axios from 'axios';
+    axios.defaults.withCredentials = true;
     import {mapState} from 'vuex'
     export default {
         name: 'NavHeader',

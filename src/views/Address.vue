@@ -149,7 +149,8 @@
     import NavBread from './../components/NavBread.vue'
     import NavFooter from './../components/NavFooter.vue'
     import Modal from './../components/Modal.vue'
-    import axios from 'axios'
+    import axios from 'axios';
+    axios.defaults.withCredentials = true;
     export default {
         name: 'HelloWorld',
         data() {

@@ -137,7 +137,8 @@
     import NavFooter from './../components/NavFooter.vue'
     import Modal from './../components/Modal.vue'
     import {currency} from './../util/currency'
-    import axios from 'axios'
+    import axios from 'axios';
+    axios.defaults.withCredentials = true;
     export default {
         name: 'HelloWorld',
         data() {
