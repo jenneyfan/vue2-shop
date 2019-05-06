@@ -24,8 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));    // 设置静态资�
 
 // CORS配置，服务器端跨域
 app.all('*',function (req,res,next) {
-  res.header('Access-Control-Allow-Origin','*');
-  res.header('Access-Control-Allow-Headers','Origin, X-Request-Width, Content-Type, Accept');
+  res.header('Access-Control-Allow-Origin','http://192.168.0.117:4000');    // 允许接受的请求域名
+  res.header('Access-Control-Allow-Headers','Origin, X-Request-Width, Content-Type, Accept');   // 返回的请求头字段
+  res.header("Access-Control-Allow-Credentials", true);     // 是否允许发送Cookie
   res.header('Access-Control-Allow-Methods','PUT, POST, GET, DELETE, OPTIONS');
   res.header('X-Powered-By','3.2.1');
   res.header('Content-Type','application/json;chartset=utf-8');
